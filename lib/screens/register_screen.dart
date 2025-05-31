@@ -34,13 +34,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
         children: [
           LogoWidget(),
-          _emailWidget,
-          SizedBox(height: 10,),
-          _passwordWidget,
-          SizedBox(height: 10,),
-          _registerButton
+          Expanded(child: Column(
+          children: [
+            _usernameWidget,
+             SizedBox(height: 10,),
+             _emailWidget,
+            SizedBox(height: 10,),
+            _passwordWidget,
+            SizedBox(height: 10,),
+            _registerButton,
+          ],
+         )),
+          _navigateToLogin
         ],
       )),)
+    );
+  }
+
+  Widget get _usernameWidget {
+    return TextFormField(
+        validator: (value){
+            if(value!.isEmpty){
+              return "Please input full name";
+            }
+            return null;
+        },
+        decoration: InputDecoration(
+          hintText: 'Full Name' ,
+          prefixIcon: Icon(Icons.account_circle),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10)
+          )
+        ),
     );
   }
 
@@ -137,9 +162,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
       }, child: Text("Register", style: TextStyle(color: Colors.white),)
     ),
-      );
-
-
+  );
   }
 
+
+  Widget get _navigateToLogin {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(onPressed: (){
+          AppRoute.key.currentState?.pushNamed(AppRoute.loginScreen);
+        }, child: Text("Already has account, Login"))
+      ],
+    );
+  }
 }
