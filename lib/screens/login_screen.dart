@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   bool _isValidEmail = false;
   bool _isValidPass = false;
   bool _obscureText = false;
@@ -108,7 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
         if (value!.isEmpty) {
           return "Please input password";
         }
-
         if (_isValidPass) {
           return "Please input invalid password";
         }
@@ -119,8 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
         hintText: 'Password',
         prefixIcon: Icon(Icons.lock),
         suffixIcon: GestureDetector(
-          child:
-              _obscureText
+          child:  _obscureText
                   ? Icon(Icons.visibility_off)
                   : Icon(Icons.visibility, color: Colors.green),
           onTap: () {

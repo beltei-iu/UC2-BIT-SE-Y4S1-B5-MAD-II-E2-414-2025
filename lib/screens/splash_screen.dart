@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad_2_414/route/app_route.dart';
+import 'package:mad_2_414/screens/main_screen.dart';
 import 'package:mad_2_414/widgets/logo_widget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -54,8 +56,12 @@ class _SplashScreenState extends State<SplashScreen> {
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
       onPressed: () {
-        AppRoute.key.currentState?.pushReplacementNamed(AppRoute.mainScreen);
-      }, child: Text("Login As Guest")
+
+        //AppRoute.key.currentState?.pushReplacementNamed(AppRoute.mainScreen);
+
+        Get.off(() => MainScreen());
+
+        }, child: Text("Login As Guest")
       
       ),
     );

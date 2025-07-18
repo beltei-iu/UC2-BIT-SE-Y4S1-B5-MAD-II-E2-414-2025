@@ -16,6 +16,8 @@ class AuthSharePref {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("email", email);
     await prefs.setString("password", password);
+
+
   }
 
   static Future<void> logout() async {

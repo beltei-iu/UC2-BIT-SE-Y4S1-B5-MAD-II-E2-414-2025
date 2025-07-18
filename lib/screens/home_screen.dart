@@ -1,7 +1,16 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mad_2_414/controller/cart_controller.dart';
 import 'package:mad_2_414/data/file_storage_service.dart';
+import 'package:mad_2_414/models/order.dart';
+import 'package:mad_2_414/provider/cart_provider.dart';
+import 'package:mad_2_414/services/category_service.dart';
+import 'package:mad_2_414/services/order_service.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,15 +20,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? fullName;
 
+  String? fullName;
   int? _cartItemCount = 0;
+  final cartController = Get.put(CartController());
 
   @override
   void initState() {
     super.initState();
     loadUser();
-    _loadOrder();
+    // _loadOrder();
   }
 
   Future<void> _loadOrder() async {
@@ -44,19 +54,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    //final cartProvider = Provider.of<CartProvider>(context, listen: true);
+
+
     return Scaffold(appBar: _appBar, body: _body);
   }
 
   PreferredSizeWidget get _appBar {
+
+    // cartProvider.getOrders().then((v){
+    //     setState(() {
+    //       _cartItemCount = v.length;
+    //     });
+    // }).catchError((e){
+    //     setState(() {
+    //       _cartItemCount = 0;
+    //     });
+    // });
+
     return AppBar(
-      title: Text("Hi, $fullName"),
-      elevation: 2,
+      elevation: 0.5,
+      backgroundColor: Colors.indigoAccent,
       actions: [
         badges.Badge(
-          badgeContent: Text(
-            "$_cartItemCount",
-            style: TextStyle(color: Colors.white),
-          ),
+          badgeContent: GetBuilder<CartController>(builder: (cartController){
+
+            cartController
+
+            return Text(
+              "${cartController.orders.length}",
+              style: TextStyle(color: Colors.white),
+            );
+          }),
           child: Icon(Icons.shopping_cart),
         ),
 
@@ -70,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         _welcomeWidget,
         _searchWidget,
+        _slide,
         _TopTitleWidget,
         _topProductListWidget,
       ],
@@ -77,7 +108,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget get _slide {
-    return Image.asset("assets/images/HQ.png", height: 150, fit: BoxFit.cover);
+    return Padding(
+        padding: EdgeInsets.only(top: 16, bottom: 16),
+        child: SizedBox(
+          height: 200,
+          child: Image.asset("assets/images/HQ.png", height: 200, fit: BoxFit.cover),
+        ),
+    );
   }
 
   Widget get _welcomeWidget {
@@ -137,51 +174,63 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget get _topProductListWidget {
     final cartItems =
         List.generate(10, (i) {
-          return Padding(
-            padding: EdgeInsets.only(right: 8),
-            child: Card(
-              elevation: 2,
-              child: Column(
-                children: [
-                  Image.asset("assets/images/book.jpg", height: 200),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          FileStorageService.saveOrder(i, 2000, 1, 0);
+          return SizedBox(
+            height: 250,
+            child: Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: Card(
+                elevation: 2,
+                child: Column(
+                  children: [
+                    Image.asset("assets/images/iphone.jpg", height: 150),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            //FileStorageService.saveOrder(i, 2000, 1, 0);
 
-                          final alert = AlertDialog(
-                            title: Icon(
-                              Icons.check_circle,
-                              color: Colors.green,
-                              size: 100,
-                            ),
-                            content: Text("Order saved successfuly"),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text("Ok"),
+                            final orderService = OrderService.instance;
+                            final order = Order(
+                              productId: i,
+                              price: 2000,
+                              quantity: 1,
+                              discount: 0,
+                            );
+                            orderService.insertOrder(order);
+
+                            final alert = AlertDialog(
+                              title: Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size: 100,
                               ),
-                            ],
-                          );
+                              content: Text("Order saved successfuly"),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Ok"),
+                                ),
+                              ],
+                            );
 
-                          showDialog(
-                            context: context,
-                            builder: (context) => alert,
-                          );
-                        },
-                        icon: Icon(Icons.add),
-                      ),
-                      Text(
-                        "1",
-                        style: TextStyle(fontSize: 18, color: Colors.red),
-                      ),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.remove)),
-                    ],
-                  ),
-                ],
+                            showDialog(
+                              context: context,
+                              builder: (context) => alert,
+                            );
+                          },
+                          icon: Icon(Icons.add),
+                        ),
+                        Text(
+                          "1",
+                          style: TextStyle(fontSize: 18, color: Colors.red),
+                        ),
+                        IconButton(onPressed: () {}, icon: Icon(Icons.remove)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
