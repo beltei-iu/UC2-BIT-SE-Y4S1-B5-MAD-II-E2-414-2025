@@ -1,5 +1,3 @@
-
-
 import 'package:get/get.dart';
 
 class Message extends Translations {
@@ -13,7 +11,11 @@ class Message extends Translations {
       "englishLanguage":"English Language",
       "theme":"Theme",
       "lightTheme":"Light Theme",
-      "darkTheme":"Dark Theme"
+      "darkTheme":"Dark Theme",
+      "home":"Home",
+      "favorite":"Favorite",
+      "cart":"Cart",
+      "more":"More"
     },
     "km_KH":{
       "hi":"សួស្តី",
@@ -22,7 +24,11 @@ class Message extends Translations {
       "englishLanguage":"ភាសាអង់គ្លេស",
       "theme":"ផ្ទៃ",
       "lightTheme":"ផ្ទៃភ្លឺ",
-      "darkTheme":"ផ្ទៃងងឹត"
+      "darkTheme":"ផ្ទៃងងឹត",
+      "home":"ដើម",
+      "favorite":"ចូលចិត្ត",
+      "cart":"កន្រ្តក់",
+      "more":"បន្ថែម"
     }
   };
 

@@ -3,13 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mad_2_414/data/db_sqflite_manager.dart';
-import 'package:mad_2_414/models/category.dart';
-import 'package:mad_2_414/provider/cart_provider.dart';
 import 'package:mad_2_414/route/app_route.dart';
 import 'package:mad_2_414/screens/splash_screen.dart';
 import 'package:mad_2_414/services/category_service.dart';
-import 'package:mad_2_414/translate/Message.dart';
-import 'package:provider/provider.dart';
+import 'package:mad_2_414/translate/message.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
