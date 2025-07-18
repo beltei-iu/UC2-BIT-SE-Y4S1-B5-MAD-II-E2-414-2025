@@ -8,6 +8,7 @@ import 'package:mad_2_414/provider/cart_provider.dart';
 import 'package:mad_2_414/route/app_route.dart';
 import 'package:mad_2_414/screens/splash_screen.dart';
 import 'package:mad_2_414/services/category_service.dart';
+import 'package:mad_2_414/translate/Message.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -24,8 +25,8 @@ void main() {
   // Demo
   final categoryService = CategoryService();
   // Insert Data
-  final category = Category(name: 'Apple', nameKh: 'Apple');
-  categoryService.insertCategory(category);
+  // final category = Category(name: 'Apple', nameKh: 'Apple');
+  // categoryService.insertCategory(category);
 
   // Query
   // categoryService
@@ -58,9 +59,6 @@ class App extends StatelessWidget {
     // GetX
     return GetMaterialApp(
       title: 'Book Shop',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
 
       // Option 1
       //home: SplashScreen(),
@@ -75,11 +73,18 @@ class App extends StatelessWidget {
       onGenerateRoute: AppRoute.onGenerateRoute,
       navigatorKey: AppRoute.key,
 
-      // theme: ThemeData.light(),
-      // darkTheme: ThemeData.dark(),
-      // themeMode: themeController.theme,
+
 
       home: SplashScreen(),
+
+      // Translate
+      translations: Message(),
+      locale: Get.deviceLocale,
+
+      // Theme
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: Get.isDarkMode ? ThemeMode.dark : ThemeMode.light,
     );
   }
 }

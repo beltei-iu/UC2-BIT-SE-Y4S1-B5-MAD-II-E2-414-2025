@@ -79,9 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         badges.Badge(
           badgeContent: GetBuilder<CartController>(builder: (cartController){
-
-            cartController
-
             return Text(
               "${cartController.orders.length}",
               style: TextStyle(color: Colors.white),
@@ -124,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Hi, $fullName",
+            "hi".tr +" "+"$fullName",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
