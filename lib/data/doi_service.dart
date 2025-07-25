@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 final dio = Dio();
 
 class DoiService {
@@ -86,22 +86,22 @@ class DoiService {
   Future<void> downloadFile(String filename) async {
     final dio = Dio();
     final apiUrl = "https://example.com/upload";
-    final dir = await getApplicationDocumentsDirectory();
-    final filePath = "${dir.path}/$filename";
-    try {
-      await dio.download(
-        apiUrl,
-        filePath,
-        onReceiveProgress: (received, total) {
-          if (total != -1) {
-            print("Downloading: ${(received / total * 100).toStringAsFixed(0)}%");
-          }
-        },
-      );
-      print("Download saved to: $filePath");
-    } catch (e) {
-      print("Download error: $e");
-    }
+    // final dir = await getApplicationDocumentsDirectory();
+    // final filePath = "${dir.path}/$filename";
+    // try {
+    //   await dio.download(
+    //     apiUrl,
+    //     filePath,
+    //     onReceiveProgress: (received, total) {
+    //       if (total != -1) {
+    //         print("Downloading: ${(received / total * 100).toStringAsFixed(0)}%");
+    //       }
+    //     },
+    //   );
+    //   print("Download saved to: $filePath");
+    // } catch (e) {
+    //   print("Download error: $e");
+    // }
   }
 
 

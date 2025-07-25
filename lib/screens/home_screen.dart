@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,12 +26,23 @@ class _HomeScreenState extends State<HomeScreen> {
   int? _cartItemCount = 0;
   final cartController = Get.put(CartController());
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
-    loadUser();
+    // loadUser();
     // _loadOrder();
+    _currentUser();
   }
+
+  Future<void> _currentUser() async{
+    final currentUser = await _auth.currentUser;
+    setState(() {
+      fullName = currentUser!.email ?? "Guest";
+    });
+  }
+
 
   Future<void> _loadOrder() async {
     List<String> ordrs = await FileStorageService.getOrders();

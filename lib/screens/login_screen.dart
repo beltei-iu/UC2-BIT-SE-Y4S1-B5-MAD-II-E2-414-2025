@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad_2_414/data/auth_share_pref.dart';
 import 'package:mad_2_414/route/app_route.dart';
+import 'package:mad_2_414/screens/main_screen.dart';
 import 'package:mad_2_414/widgets/logo_widget.dart';
 import 'package:mad_2_414/widgets/social_login_widget.dart';
 
@@ -21,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -143,12 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_formKey.currentState!.validate()) {
             final email = _emailController.text;
             final password = _passwordController.text;
-
             AuthSharePref.login(email, password);
-
-            AppRoute.key.currentState!.pushReplacementNamed(
-              AppRoute.mainScreen,
-            );
+            _onLogin(email, password);
           } else {
             // Display Error
           }
@@ -178,5 +179,21 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _onLogin(String email, String password) async{
+    try{
+      await _auth.signInWithEmailAndPassword(email: email, password: password)
+          .then((UserCredential user){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+            Get.off(MainScreen());
+          }).catchError((error){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$error")));
+        print("Error");
+      });
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+      print("Error : $e");
+    }
   }
 }

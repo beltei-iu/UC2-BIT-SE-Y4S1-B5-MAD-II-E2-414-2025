@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad_2_414/data/auth_share_pref.dart';
 import 'package:mad_2_414/route/app_route.dart';
+import 'package:mad_2_414/screens/login_screen.dart';
 import 'package:mad_2_414/widgets/logo_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -20,6 +23,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _fullNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  // Firebase Auth
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -169,11 +175,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             print("Email: $email");
             print("Password: $password");
 
+            _onRegister(email, password);
             AuthSharePref.register(fullName, email, password);
-
-            AppRoute.key.currentState!.pushReplacementNamed(
-              AppRoute.mainScreen,
-            );
           } else {
             // Display Error
           }
@@ -205,5 +208,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _onRegister(String email, String password) async{
+    try{
+      await _auth.createUserWithEmailAndPassword(email: email, password: password)
+          .then((UserCredential user){
+        // Success
+        print("UserCredential : ${user}");
+        Get.to(LoginScreen());
+      }).catchError((error){
+        print("CatchError : $error");
+      });
+    }catch(e){
+      print("Error : $e");
+    }
   }
 }
