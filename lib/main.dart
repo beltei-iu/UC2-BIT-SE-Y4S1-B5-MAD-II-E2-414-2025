@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mad_2_414/data/db_sqflite_manager.dart';
@@ -13,34 +14,22 @@ void main() async {
   // Make Widget Initialize
   WidgetsFlutterBinding.ensureInitialized();
   // Firebase Config
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // init DB
-  if (Platform.isWindows || Platform.isLinux) {
-    // Initialize FFI
-    sqfliteFfiInit();
-  }
-  DbSqfliteManager.instance.database;
   runApp(App());
 }
 
 class App extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     return GetMaterialApp(
       title: 'Book Shop',
       onGenerateRoute: AppRoute.onGenerateRoute,
       navigatorKey: AppRoute.key,
       home: SplashScreen(),
-
       // Translate
       translations: Message(),
       locale: Get.deviceLocale,
-
       // Theme
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),

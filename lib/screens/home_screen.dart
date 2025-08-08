@@ -1,17 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mad_2_414/controller/cart_controller.dart';
 import 'package:mad_2_414/data/file_storage_service.dart';
 import 'package:mad_2_414/models/order.dart';
+import 'package:mad_2_414/models/product.dart';
 import 'package:mad_2_414/provider/cart_provider.dart';
+import 'package:mad_2_414/screens/add_product_screen.dart';
 import 'package:mad_2_414/services/category_service.dart';
 import 'package:mad_2_414/services/order_service.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,85 +24,97 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  String? fullName;
-  int? _cartItemCount = 0;
+  String _fullName = "Guest";
   final cartController = Get.put(CartController());
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseDatabase _db = FirebaseDatabase.instance;
+
+  Map<String, Product> productsMap = {};
 
   @override
   void initState() {
     super.initState();
-    // loadUser();
-    // _loadOrder();
     _currentUser();
+    _fetchProducts();
   }
 
-  Future<void> _currentUser() async{
-    final currentUser = await _auth.currentUser;
+  Future<void> _currentUser() async {
+    final currentUser = await _auth.currentUser!;
     setState(() {
-      fullName = currentUser!.email ?? "Guest";
+      _fullName = currentUser.email!.split("@")[0];
     });
   }
 
-
-  Future<void> _loadOrder() async {
-    List<String> ordrs = await FileStorageService.getOrders();
-    setState(() {
-      _cartItemCount = ordrs.length;
-    });
-  }
-
-  Future<void> loadUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? username = prefs.getString("fullName");
-    String? email = prefs.getString("email");
-
-    // await Future.delayed(Duration(seconds: 2));
-    String? subUsername = email != null ? email.split("@")[0] : null;
-    setState(() {
-      this.fullName = username ?? subUsername ?? "Guest";
-    });
-    print("User data loaded");
+  Future<void> _fetchProducts() async {
+    try {
+      final dbRef = await _db.ref("products");
+      await dbRef.onValue.listen((event) {
+        Map<dynamic, dynamic> data = event.snapshot.value as dynamic;
+        print("Data : $data");
+        data.forEach((key, value) {
+          print("key  : $key");
+          print("value : $value");
+          try {
+            // If value is already a Map (common in Firebase)
+            if (value is Map<String, dynamic>) {
+              Product product = Product.fromMap(value);
+              print("Product: ${product.toString()}");
+              setState(() {
+                productsMap[key] = product;
+              });
+            }
+            // If value is a JSON string (less common)
+            else if (value is String) {
+              Map<String, dynamic> productMap = jsonDecode(value);
+              Product product = Product.fromMap(productMap);
+              print("Product: ${product.toString()}");
+              setState(() {
+                productsMap[key] = product;
+              });
+            }
+          } catch (e) {
+            print("Error parsing product $key: $e");
+          }
+        });
+      });
+    } catch (error) {
+      print("Error $error");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
-    //final cartProvider = Provider.of<CartProvider>(context, listen: true);
-
-
     return Scaffold(appBar: _appBar, body: _body);
   }
 
   PreferredSizeWidget get _appBar {
-
-    // cartProvider.getOrders().then((v){
-    //     setState(() {
-    //       _cartItemCount = v.length;
-    //     });
-    // }).catchError((e){
-    //     setState(() {
-    //       _cartItemCount = 0;
-    //     });
-    // });
-
     return AppBar(
       elevation: 0.5,
       backgroundColor: Colors.indigoAccent,
       actions: [
-        badges.Badge(
-          badgeContent: GetBuilder<CartController>(builder: (cartController){
-            return Text(
-              "${cartController.orders.length}",
-              style: TextStyle(color: Colors.white),
-            );
-          }),
-          child: Icon(Icons.shopping_cart),
+        Padding(
+          padding: EdgeInsets.only(right: 16),
+          child: badges.Badge(
+            badgeContent: GetBuilder<CartController>(
+              builder: (cartController) {
+                return Text(
+                  "${cartController.orders.length}",
+                  style: TextStyle(color: Colors.white),
+                );
+              },
+            ),
+            child: Icon(Icons.shopping_cart),
+          ),
         ),
-
-        Icon(Icons.more_vert),
+        GestureDetector(
+          child: Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: Icon(Icons.add, color: Colors.white),
+          ),
+          onTap: () {
+            Get.to(AddProductScreen());
+          },
+        ),
       ],
     );
   }
@@ -118,11 +133,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget get _slide {
     return Padding(
-        padding: EdgeInsets.only(top: 16, bottom: 16),
-        child: SizedBox(
+      padding: EdgeInsets.only(top: 16, bottom: 16),
+      child: SizedBox(
+        height: 200,
+        child: Image.asset(
+          "assets/images/HQ.png",
           height: 200,
-          child: Image.asset("assets/images/HQ.png", height: 200, fit: BoxFit.cover),
+          fit: BoxFit.cover,
         ),
+      ),
     );
   }
 
@@ -133,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "hi".tr +" "+"$fullName",
+            "hi".tr + " " + "$_fullName",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -181,8 +200,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget get _topProductListWidget {
+    print("productsMap.values: ${productsMap.values}");
+
     final cartItems =
-        List.generate(10, (i) {
+        productsMap.values.map((i) {
           return SizedBox(
             height: 250,
             child: Padding(
@@ -196,17 +217,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            //FileStorageService.saveOrder(i, 2000, 1, 0);
-
-                            final orderService = OrderService.instance;
-                            final order = Order(
-                              productId: i,
-                              price: 2000,
-                              quantity: 1,
-                              discount: 0,
-                            );
-                            orderService.insertOrder(order);
-
                             final alert = AlertDialog(
                               title: Icon(
                                 Icons.check_circle,
@@ -244,14 +254,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         }).toList();
-
-    // Option 1
-    // return SingleChildScrollView(
-    //   scrollDirection: Axis.horizontal,
-    //   child: Row(children: cartItems),
-    // );
-
-    // Option 2
     return SizedBox(
       height: 250,
       child: ListView(scrollDirection: Axis.horizontal, children: cartItems),

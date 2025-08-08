@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mad_2_414/data/auth_share_pref.dart';
 import 'package:mad_2_414/route/app_route.dart';
 import 'package:mad_2_414/screens/main_screen.dart';
+import 'package:mad_2_414/screens/register_screen.dart';
 import 'package:mad_2_414/widgets/logo_widget.dart';
 import 'package:mad_2_414/widgets/social_login_widget.dart';
 
@@ -15,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   bool _isValidEmail = false;
   bool _isValidPass = false;
   bool _obscureText = false;
@@ -40,10 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Column(
             children: [
-              LogoWidget(),
               Expanded(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    LogoWidget(),
                     _emailWidget,
                     SizedBox(height: 10),
                     _passwordWidget,
@@ -51,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     _loginButton,
                     SizedBox(height: 10),
                     SocialLoginWidget(),
+                    SizedBox(height: 20),
+                    _skip,
                   ],
                 ),
               ),
@@ -124,7 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
         hintText: 'Password',
         prefixIcon: Icon(Icons.lock),
         suffixIcon: GestureDetector(
-          child:  _obscureText
+          child:
+              _obscureText
                   ? Icon(Icons.visibility_off)
                   : Icon(Icons.visibility, color: Colors.green),
           onTap: () {
@@ -148,10 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_formKey.currentState!.validate()) {
             final email = _emailController.text;
             final password = _passwordController.text;
-            AuthSharePref.login(email, password);
             _onLogin(email, password);
-          } else {
-            // Display Error
           }
         },
         child: Text("Login", style: TextStyle(color: Colors.white)),
@@ -159,9 +160,26 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget get _navigateToRegister {
+  Widget get _skip {
     return Padding(
       padding: EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Get.off(MainScreen());
+            },
+            child: Text("Skip", style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get _navigateToRegister {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 32),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -169,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SizedBox(width: 4),
           GestureDetector(
             onTap: () {
-              AppRoute.key.currentState!.pushNamed(AppRoute.registerScreen);
+              Get.off(RegisterScreen());
             },
             child: Text(
               "Register",
@@ -181,17 +199,23 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _onLogin(String email, String password) async{
-    try{
-      await _auth.signInWithEmailAndPassword(email: email, password: password)
-          .then((UserCredential user){
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+  Future<void> _onLogin(String email, String password) async {
+    try {
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((UserCredential user) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Success")));
             Get.off(MainScreen());
-          }).catchError((error){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$error")));
-        print("Error");
-      });
-    }catch(e){
+          })
+          .catchError((error) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("$error")));
+            print("Error");
+          });
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
       print("Error : $e");
     }

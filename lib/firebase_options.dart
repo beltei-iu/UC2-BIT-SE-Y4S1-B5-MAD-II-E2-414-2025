@@ -23,9 +23,15 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         return windows;
       case TargetPlatform.linux:
@@ -41,48 +47,33 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCeR0PTbWe6mdKfiHCZ8m2gZjxsAbV_N_o',
-    appId: '1:971989402381:web:c3503a4128f768964ae644',
-    messagingSenderId: '971989402381',
-    projectId: 'fir-d4b70',
-    authDomain: 'fir-d4b70.firebaseapp.com',
-    storageBucket: 'fir-d4b70.firebasestorage.app',
-    measurementId: 'G-MNS0EFBD07',
+    apiKey: 'AIzaSyAOHLcK2whPlr2JJI6Lb8MBCjS8mc0d7iQ',
+    appId: '1:1027220963414:web:a8da03c4a1b1d2258f7bf7',
+    messagingSenderId: '1027220963414',
+    projectId: 'beltei',
+    authDomain: 'beltei.firebaseapp.com',
+    databaseURL: 'https://beltei-default-rtdb.firebaseio.com',
+    storageBucket: 'beltei.appspot.com',
+    measurementId: 'G-BGKGCB9H9R',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCkO6Ezq4GtzzQ5tT2Me7REL67Phh46n6Y',
-    appId: '1:971989402381:android:bd01ec85d82ea9434ae644',
-    messagingSenderId: '971989402381',
-    projectId: 'fir-d4b70',
-    storageBucket: 'fir-d4b70.firebasestorage.app',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDLVljxr3tGY6h0fgoso5oV_Z6Yn0IgHRU',
-    appId: '1:971989402381:ios:9ae80d3dc23d9d3f4ae644',
-    messagingSenderId: '971989402381',
-    projectId: 'fir-d4b70',
-    storageBucket: 'fir-d4b70.firebasestorage.app',
-    iosBundleId: 'com.example.mad2414',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDLVljxr3tGY6h0fgoso5oV_Z6Yn0IgHRU',
-    appId: '1:971989402381:ios:9ae80d3dc23d9d3f4ae644',
-    messagingSenderId: '971989402381',
-    projectId: 'fir-d4b70',
-    storageBucket: 'fir-d4b70.firebasestorage.app',
-    iosBundleId: 'com.example.mad2414',
+    apiKey: 'AIzaSyC7zBVe3DmhLcoaTbK0y58wiGXw4LgZuWM',
+    appId: '1:1027220963414:android:843c333bbab7acc78f7bf7',
+    messagingSenderId: '1027220963414',
+    projectId: 'beltei',
+    databaseURL: 'https://beltei-default-rtdb.firebaseio.com',
+    storageBucket: 'beltei.appspot.com',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCeR0PTbWe6mdKfiHCZ8m2gZjxsAbV_N_o',
-    appId: '1:971989402381:web:edab378f289c65974ae644',
-    messagingSenderId: '971989402381',
-    projectId: 'fir-d4b70',
-    authDomain: 'fir-d4b70.firebaseapp.com',
-    storageBucket: 'fir-d4b70.firebasestorage.app',
-    measurementId: 'G-HSLQQ60F50',
+    apiKey: 'AIzaSyAOHLcK2whPlr2JJI6Lb8MBCjS8mc0d7iQ',
+    appId: '1:1027220963414:web:aef1a62eaa9c9e8b8f7bf7',
+    messagingSenderId: '1027220963414',
+    projectId: 'beltei',
+    authDomain: 'beltei.firebaseapp.com',
+    databaseURL: 'https://beltei-default-rtdb.firebaseio.com',
+    storageBucket: 'beltei.appspot.com',
+    measurementId: 'G-ZXDY91GXNP',
   );
 }

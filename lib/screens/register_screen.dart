@@ -40,10 +40,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           key: _formKey,
           child: Column(
             children: [
-              LogoWidget(),
               Expanded(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    LogoWidget(),
                     _fullNameWidget,
                     SizedBox(height: 10),
                     _emailWidget,
@@ -176,7 +177,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             print("Password: $password");
 
             _onRegister(email, password);
-            AuthSharePref.register(fullName, email, password);
           } else {
             // Display Error
           }
@@ -188,7 +188,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget get _navigateToLogin {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.only(bottom: 32),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -196,9 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           SizedBox(width: 4),
           GestureDetector(
             onTap: () {
-              AppRoute.key.currentState!.pushReplacementNamed(
-                AppRoute.loginScreen,
-              );
+              Get.off(LoginScreen());
             },
             child: Text(
               " Login",
@@ -210,17 +208,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Future<void> _onRegister(String email, String password) async{
-    try{
-      await _auth.createUserWithEmailAndPassword(email: email, password: password)
-          .then((UserCredential user){
-        // Success
-        print("UserCredential : ${user}");
-        Get.to(LoginScreen());
-      }).catchError((error){
-        print("CatchError : $error");
-      });
-    }catch(e){
+  Future<void> _onRegister(String email, String password) async {
+    try {
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((UserCredential user) {
+            // Success
+            print("UserCredential : ${user}");
+            Get.off(LoginScreen());
+          })
+          .catchError((error) {
+            print("CatchError : $error");
+          });
+    } catch (e) {
       print("Error : $e");
     }
   }
