@@ -15,7 +15,32 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Firebase Config
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  // final _db = FirebaseDatabase.instance;
+  // final _dbRef = await _db.ref("products");
+  // List<Map<String, dynamic>> dataReq = [
+  //   {
+  //     "name_kh": "iPhone 15 Pro",
+  //     "name_en": "iPhone 15 Pro",
+  //     "brand": "Apple",
+  //     "price": 1450,
+  //     "stock": 5,
+  //     "image": "https://example.com/iphone15pro.jpg",
+  //   },
+  //   {
+  //     "name_kh": "Samsung Galaxy S23",
+  //     "name_en": "Samsung Galaxy S23",
+  //     "brand": "Samsung",
+  //     "price": 1200,
+  //     "stock": 8,
+  //     "image": "https://example.com/galaxy_s23.jpg",
+  //   },
+  // ];
+  // final updates = <String, dynamic>{};
+  // for (var item in dataReq) {
+  //   final newKey = _dbRef.child("products").push().key; // Generate unique ID
+  //   updates["products/$newKey"] = item; // Add to batch
+  // }
+  // await _dbRef.update(updates); // Push all at once
   runApp(App());
 }
 
