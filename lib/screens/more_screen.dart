@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:mad_2_414/data/auth_share_pref.dart';
 import 'package:mad_2_414/route/app_route.dart';
@@ -131,6 +132,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Future<void> _logout() async {
     try {
+      await FacebookAuth.instance.logOut();
       await _auth.signOut();
       Get.off(LoginScreen());
     } catch (error) {
